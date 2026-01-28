@@ -1,0 +1,199 @@
+/* ============================================
+   ArrangementView - Song Structure Styles
+   Music Composer v1.1
+   ============================================ */
+
+.arrangement-view {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.arrangement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.arrangement-header h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.add-block-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.add-block-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.add-block-form {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.add-block-form select {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.add-block-form button {
+  padding: 4px 8px;
+  font-size: 11px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* Timeline */
+.arrangement-timeline {
+  position: relative;
+  height: 70px;
+  padding: 20px 0 10px;
+}
+
+/* Beat Markers */
+.beat-markers {
+  position: absolute;
+  top: 4px;
+  left: 60px;
+  right: 0;
+  height: 16px;
+}
+
+.beat-marker {
+  position: absolute;
+  font-size: 10px;
+  color: var(--text-muted);
+  transform: translateX(-50%);
+}
+
+/* Blocks Container */
+.blocks-container {
+  position: relative;
+  height: 36px;
+  margin: 0 60px 0 60px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+}
+
+.empty-arrangement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Arrangement Block */
+.arrangement-block {
+  position: absolute;
+  top: 2px;
+  height: calc(100% - 4px);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: white;
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.arrangement-block:hover {
+  filter: brightness(1.1);
+}
+
+.arrangement-block.selected {
+  box-shadow: inset 0 0 0 2px white;
+}
+
+.block-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.block-repeat {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.block-delete {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.block-delete:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Playhead */
+.arrangement-playhead {
+  position: absolute;
+  top: 20px;
+  bottom: 10px;
+  width: 2px;
+  background: var(--accent-danger);
+  pointer-events: none;
+  margin-left: 60px;
+}
+
+/* Block Details */
+.block-details {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-color);
+}
+
+.block-details label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.block-details input {
+  width: 80px;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.block-details input[type="text"] {
+  width: 120px;
+}

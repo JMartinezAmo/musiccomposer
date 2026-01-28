@@ -1,0 +1,120 @@
+/* ============================================
+   VersionsPanel - Snapshots & History Styles
+   Music Composer v1.1
+   ============================================ */
+
+.versions-panel {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 25%;
+}
+
+.versions-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* Version Item */
+.version-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.version-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.version-item.expanded {
+  background: var(--bg-tertiary);
+  flex-wrap: wrap;
+}
+
+.version-item.current {
+  cursor: default;
+}
+
+.version-item.current:hover {
+  background: transparent;
+}
+
+.version-icon {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+.version-item.current .version-icon {
+  color: var(--accent-primary);
+}
+
+.version-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.version-name {
+  font-size: 12px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.version-date {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Version Actions */
+.version-actions {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+/* Create Snapshot */
+.create-snapshot-btn {
+  width: calc(100% - 16px);
+  margin: 8px;
+  padding: 8px;
+  border: 1px dashed var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.create-snapshot-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.create-snapshot-form {
+  padding: 8px;
+}
+
+.create-snapshot-form input {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.create-snapshot-actions {
+  display: flex;
+  gap: 6px;
+}

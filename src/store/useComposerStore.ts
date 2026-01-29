@@ -435,6 +435,176 @@ export const useComposerStore = create<ComposerStore>()(
       scheduleAutosave(get());
     },
 
+    moveNotes(trackId: string, noteIds: string[], deltaBeat: number, deltaPitch: number) {
+      const state = get();
+      const track = state.composition?.tracks.find((t) => t.id === trackId);
+      if (!track) return;
+
+      const notesToMove = track.notes.filter((n) => noteIds.includes(n.id));
+      const previousStates = notesToMove.map((n) => ({ id: n.id, startBeat: n.startBeat, pitch: n.pitch }));
+
+      const action: HistoryAction = {
+        type: 'MOVE_NOTES',
+        timestamp: Date.now(),
+        description: `Move ${noteIds.length} notes`,
+        forward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            if (t) {
+              t.notes.forEach((n) => {
+                if (noteIds.includes(n.id)) {
+                  n.startBeat = Math.max(0, n.startBeat + deltaBeat);
+                  n.pitch = Math.max(0, Math.min(127, n.pitch + deltaPitch));
+                }
+              });
+              draft.isModified = true;
+            }
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+        backward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            if (t) {
+              previousStates.forEach((prev) => {
+                const note = t.notes.find((n) => n.id === prev.id);
+                if (note) {
+                  note.startBeat = prev.startBeat;
+                  note.pitch = prev.pitch;
+                }
+              });
+              draft.isModified = true;
+            }
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+      };
+
+      action.forward();
+
+      set((draft) => {
+        draft.undoStack.push(action);
+        draft.redoStack = [];
+      });
+
+      scheduleAutosave(get());
+    },
+
+    resizeNote(trackId: string, noteId: string, newDuration: number) {
+      const state = get();
+      const track = state.composition?.tracks.find((t) => t.id === trackId);
+      const note = track?.notes.find((n) => n.id === noteId);
+      if (!note) return;
+
+      const previousDuration = note.durationBeats;
+
+      const action: HistoryAction = {
+        type: 'RESIZE_NOTE',
+        timestamp: Date.now(),
+        description: 'Resize note',
+        forward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            const n = t?.notes.find((n) => n.id === noteId);
+            if (n) {
+              n.durationBeats = Math.max(0.0625, newDuration); // Min 1/16 note
+              draft.isModified = true;
+            }
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+        backward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            const n = t?.notes.find((n) => n.id === noteId);
+            if (n) {
+              n.durationBeats = previousDuration;
+              draft.isModified = true;
+            }
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+      };
+
+      action.forward();
+
+      set((draft) => {
+        draft.undoStack.push(action);
+        draft.redoStack = [];
+      });
+
+      scheduleAutosave(get());
+    },
+
+    duplicateNotes(trackId: string, noteIds: string[]) {
+      const state = get();
+      const track = state.composition?.tracks.find((t) => t.id === trackId);
+      if (!track) return;
+
+      const notesToDuplicate = track.notes.filter((n) => noteIds.includes(n.id));
+      const newNotes: Note[] = notesToDuplicate.map((n) => ({
+        ...n,
+        id: uuidv4(),
+        startBeat: n.startBeat + n.durationBeats, // Place after original
+      }));
+      const newNoteIds = newNotes.map((n) => n.id);
+
+      const action: HistoryAction = {
+        type: 'DUPLICATE_NOTES',
+        timestamp: Date.now(),
+        description: `Duplicate ${noteIds.length} notes`,
+        forward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            if (t) {
+              t.notes.push(...newNotes);
+              draft.isModified = true;
+            }
+            draft.selectedNoteIds = new Set(newNoteIds);
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+        backward: () => {
+          set((draft) => {
+            const t = draft.composition?.tracks.find((t) => t.id === trackId);
+            if (t) {
+              t.notes = t.notes.filter((n) => !newNoteIds.includes(n.id));
+              draft.isModified = true;
+            }
+            draft.selectedNoteIds = new Set(noteIds);
+          });
+          const track = get().composition?.tracks.find((t) => t.id === trackId);
+          if (track) {
+            audioEngine.scheduleTrack(track);
+          }
+        },
+      };
+
+      action.forward();
+
+      set((draft) => {
+        draft.undoStack.push(action);
+        draft.redoStack = [];
+      });
+
+      scheduleAutosave(get());
+    },
+
     // ========================================
     // Track Operations
     // ========================================

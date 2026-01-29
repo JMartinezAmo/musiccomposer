@@ -129,6 +129,9 @@ export interface ComposerActions {
   ) => void;
   deleteNote: (trackId: string, noteId: string) => void;
   deleteSelectedNotes: () => void;
+  moveNotes: (trackId: string, noteIds: string[], deltaBeat: number, deltaPitch: number) => void;
+  resizeNote: (trackId: string, noteId: string, newDuration: number) => void;
+  duplicateNotes: (trackId: string, noteIds: string[]) => void;
 
   // === Track Operations ===
   addTrack: (track: Omit<Track, 'id'>) => void;

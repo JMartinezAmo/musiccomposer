@@ -1,0 +1,122 @@
+/* ============================================
+   Header - Transport & Global Controls
+   Music Composer v1.1
+   ============================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: var(--header-height);
+  padding: 0 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+/* Transport Controls */
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.transport-btn {
+  width: 40px;
+  height: 36px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.transport-btn:hover {
+  background: var(--bg-primary);
+  border-color: #444;
+}
+
+.transport-btn.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.position-display {
+  font-family: monospace;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 0 12px;
+  min-width: 60px;
+}
+
+/* Header Labels */
+.header-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.header-input {
+  width: 60px;
+  text-align: center;
+}
+
+.header-input.tempo-input {
+  width: 50px;
+}
+
+.header-select {
+  min-width: 70px;
+}
+
+.header-unit {
+  color: var(--text-muted);
+}
+
+/* Header Buttons */
+.header-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.header-btn:hover {
+  background: var(--bg-primary);
+}
+
+.header-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.header-btn.primary {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+}
+
+.header-btn.primary:hover {
+  background: #43A047;
+}

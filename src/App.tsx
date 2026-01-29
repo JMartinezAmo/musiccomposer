@@ -27,6 +27,20 @@ function App() {
   const composition = useComposerStore((state) => state.composition);
   const aiLoadProgress = useComposerStore((state) => state.aiLoadProgress);
   const aiStatus = useComposerStore((state) => state.aiStatus);
+  const isModified = useComposerStore((state) => state.isModified);
+
+  // Prevent accidental data loss on page close/refresh
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isModified) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isModified]);
 
   // Initialize application
   useEffect(() => {

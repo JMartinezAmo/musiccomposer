@@ -13,6 +13,7 @@ import { AIAssistant } from './components/ai-assistant/AIAssistant';
 import { VersionsPanel } from './components/common/VersionsPanel';
 import { LoadingScreen } from './components/common/LoadingScreen';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { KeyboardShortcutsModal } from './components/common/KeyboardShortcutsModal';
 import { checkBrowserCompatibility, checkWebGPUSupport, ErrorType, errorMessages } from './utils/errorHandling';
 import './App.css';
 
@@ -20,6 +21,7 @@ function App() {
   const [isInitializing, setIsInitializing] = useState(true);
   const [initError, setInitError] = useState<string | null>(null);
   const [webGPUSupported, setWebGPUSupported] = useState<boolean | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const initializeAudio = useComposerStore((state) => state.initializeAudio);
   const initializeAI = useComposerStore((state) => state.initializeAI);
@@ -82,6 +84,20 @@ function App() {
     }
   }, [initializeAudio]);
 
+  // Handle keyboard shortcuts for modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Open shortcuts modal with "?"
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setShowShortcuts(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Show loading screen
   if (isInitializing) {
     return <LoadingScreen message="Iniciando aplicación..." />;
@@ -101,7 +117,7 @@ function App() {
   return (
     <ErrorBoundary>
       <div className="app" onClick={handleFirstInteraction}>
-        <Header />
+        <Header onShowShortcuts={() => setShowShortcuts(true)} />
 
         <div className="app-body">
           {/* Left Sidebar: Tracks + AI */}
@@ -138,6 +154,12 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Keyboard Shortcuts Modal */}
+        <KeyboardShortcutsModal
+          isOpen={showShortcuts}
+          onClose={() => setShowShortcuts(false)}
+        />
       </div>
     </ErrorBoundary>
   );

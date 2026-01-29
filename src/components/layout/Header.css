@@ -50,10 +50,21 @@
   border-color: #444;
 }
 
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.5), 0 0 4px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(76, 175, 80, 0.7), 0 0 8px rgba(76, 175, 80, 0.5);
+  }
+}
+
 .transport-btn.active {
   background: var(--accent-primary);
   border-color: var(--accent-primary);
   color: white;
+  transform: scale(1.05);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .position-display {

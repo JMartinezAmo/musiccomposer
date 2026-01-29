@@ -18,7 +18,11 @@ const TIME_SIGNATURES = [
   { numerator: 7, denominator: 8 },
 ] as const;
 
-export function Header() {
+interface HeaderProps {
+  onShowShortcuts?: () => void;
+}
+
+export function Header({ onShowShortcuts }: HeaderProps) {
   const composition = useComposerStore((state) => state.composition);
   const isPlaying = useComposerStore((state) => state.isPlaying);
   const currentBeat = useComposerStore((state) => state.currentBeat);
@@ -54,13 +58,25 @@ export function Header() {
           className={`transport-btn ${isPlaying ? 'active' : ''}`}
           onClick={() => (isPlaying ? pause() : play())}
           title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
+          aria-pressed={isPlaying}
+          aria-label={isPlaying ? 'Pausar reproducción' : 'Iniciar reproducción'}
         >
           {isPlaying ? '⏸' : '▶'}
         </button>
-        <button className="transport-btn" onClick={stop} title="Stop">
+        <button
+          className="transport-btn"
+          onClick={stop}
+          title="Stop"
+          aria-label="Detener reproducción"
+        >
           ⏹
         </button>
-        <span className="position-display" title="Position (Bar:Beat)">
+        <span
+          className="position-display"
+          title="Position (Bar:Beat)"
+          aria-live="polite"
+          aria-label={`Posición: compás ${formatPosition(currentBeat).replace(':', ', tiempo ')}`}
+        >
           {formatPosition(currentBeat)}
         </span>
       </div>
@@ -135,12 +151,13 @@ export function Header() {
       <div className="header-spacer" />
 
       {/* Undo/Redo */}
-      <div className="header-section">
+      <div className="header-section" role="group" aria-label="Historial">
         <button
           className="header-btn"
           onClick={undo}
           disabled={undoStack.length === 0}
           title="Undo (Cmd+Z)"
+          aria-label={`Deshacer${undoStack.length > 0 ? ` (${undoStack.length} acciones disponibles)` : ''}`}
         >
           ↩ Deshacer
         </button>
@@ -149,6 +166,7 @@ export function Header() {
           onClick={redo}
           disabled={redoStack.length === 0}
           title="Redo (Cmd+Shift+Z)"
+          aria-label={`Rehacer${redoStack.length > 0 ? ` (${redoStack.length} acciones disponibles)` : ''}`}
         >
           ↪ Rehacer
         </button>
@@ -156,10 +174,29 @@ export function Header() {
 
       {/* Save */}
       <div className="header-section">
-        <button className="header-btn primary" onClick={saveComposition} title="Save (Cmd+S)">
+        <button
+          className="header-btn primary"
+          onClick={saveComposition}
+          title="Save (Cmd+S)"
+          aria-label="Guardar composición"
+        >
           💾 Guardar
         </button>
       </div>
+
+      {/* Help */}
+      {onShowShortcuts && (
+        <div className="header-section">
+          <button
+            className="header-btn"
+            onClick={onShowShortcuts}
+            title="Atajos de teclado (?)"
+            aria-label="Mostrar atajos de teclado"
+          >
+            ⌨ Atajos
+          </button>
+        </div>
+      )}
     </header>
   );
 }

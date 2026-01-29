@@ -21,6 +21,32 @@ const TOTAL_NOTES = MAX_PITCH - MIN_PITCH + 1;
 const SNAP_VALUES = [0.25, 0.5, 1, 2, 4];
 const SNAP_LABELS = ['1/16', '1/8', '1/4', '1/2', '1'];
 
+// Color palette - improved contrast for accessibility
+const COLORS = {
+  // Canvas background
+  background: '#1a1a2e',
+  // Piano keys
+  keyWhite: '#4a4a6a',      // Increased from #3d3d5c (better contrast)
+  keyBlack: '#35354f',      // Increased from #2d2d44
+  keyLabel: '#b0b0b0',      // Increased from #888 (WCAG AA compliant)
+  // Grid rows
+  rowInScale: '#2d2d50',    // In-scale rows slightly brighter
+  rowInScaleBlack: '#282845',
+  rowOutOfScale: '#1e1e36',
+  // Grid lines
+  gridBar: '#606070',       // Increased from #555
+  gridBeat: '#404050',      // Increased from #333
+  beatLabel: '#909090',     // Increased from #666
+  // Notes - high contrast green for visibility
+  note: '#43A047',          // Brighter green
+  noteSelected: '#66BB6A',  // Even brighter when selected
+  noteHovered: '#81C784',   // Bright on hover
+  noteBorder: '#2E7D32',
+  noteBorderSelected: '#A5D6A7',
+  // Playhead
+  playhead: '#FF7043',      // Slightly brighter orange
+};
+
 export function PianoRoll() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,7 +122,7 @@ export function PianoRoll() {
     const height = canvas.height;
 
     // Clear
-    ctx.fillStyle = '#1a1a2e';
+    ctx.fillStyle = COLORS.background;
     ctx.fillRect(0, 0, width, height);
 
     // Draw piano keys
@@ -108,19 +134,21 @@ export function PianoRoll() {
       const isInScale = scaleNotes.has(noteName);
 
       // Piano key
-      ctx.fillStyle = isBlackKey ? '#2d2d44' : '#3d3d5c';
+      ctx.fillStyle = isBlackKey ? COLORS.keyBlack : COLORS.keyWhite;
       ctx.fillRect(0, y, PIANO_KEY_WIDTH - 2, NOTE_HEIGHT - 1);
 
       // Key label for C notes
       if (noteName === 0) {
-        ctx.fillStyle = '#888';
+        ctx.fillStyle = COLORS.keyLabel;
         ctx.font = '10px monospace';
         const octave = Math.floor(pitch / 12) - 1;
         ctx.fillText(`C${octave}`, 4, y + NOTE_HEIGHT - 4);
       }
 
-      // Grid row
-      const rowColor = isInScale ? (isBlackKey ? '#252540' : '#2a2a48') : '#1e1e36';
+      // Grid row - improved contrast for scale highlighting
+      const rowColor = isInScale
+        ? (isBlackKey ? COLORS.rowInScaleBlack : COLORS.rowInScale)
+        : COLORS.rowOutOfScale;
       ctx.fillStyle = rowColor;
       ctx.fillRect(PIANO_KEY_WIDTH, y, width - PIANO_KEY_WIDTH, NOTE_HEIGHT - 1);
     }
@@ -132,7 +160,7 @@ export function PianoRoll() {
 
       // Bar lines (every 4 beats by default)
       const isBarLine = beat % 4 === 0;
-      ctx.strokeStyle = isBarLine ? '#555' : '#333';
+      ctx.strokeStyle = isBarLine ? COLORS.gridBar : COLORS.gridBeat;
       ctx.lineWidth = isBarLine ? 1 : 0.5;
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -141,7 +169,7 @@ export function PianoRoll() {
 
       // Beat number
       if (isBarLine) {
-        ctx.fillStyle = '#666';
+        ctx.fillStyle = COLORS.beatLabel;
         ctx.font = '10px monospace';
         ctx.fillText(`${Math.floor(beat / 4) + 1}`, x + 2, 12);
       }
@@ -160,12 +188,12 @@ export function PianoRoll() {
         const isSelected = selectedNoteIds.has(note.id);
         const isHovered = hoveredNote?.id === note.id;
 
-        // Note background
-        ctx.fillStyle = isSelected ? '#4CAF50' : isHovered ? '#66BB6A' : '#388E3C';
+        // Note background - improved contrast
+        ctx.fillStyle = isSelected ? COLORS.noteSelected : isHovered ? COLORS.noteHovered : COLORS.note;
         ctx.fillRect(x + 1, y + 1, noteWidth - 2, NOTE_HEIGHT - 2);
 
         // Note border
-        ctx.strokeStyle = isSelected ? '#81C784' : '#2E7D32';
+        ctx.strokeStyle = isSelected ? COLORS.noteBorderSelected : COLORS.noteBorder;
         ctx.lineWidth = 1;
         ctx.strokeRect(x + 1, y + 1, noteWidth - 2, NOTE_HEIGHT - 2);
 
@@ -179,7 +207,7 @@ export function PianoRoll() {
     // Draw playhead
     const playheadX = PIANO_KEY_WIDTH + (currentBeat - viewportStart) * scaledBeatWidth;
     if (playheadX >= PIANO_KEY_WIDTH && playheadX <= width) {
-      ctx.strokeStyle = '#FF5722';
+      ctx.strokeStyle = COLORS.playhead;
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(playheadX, 0);

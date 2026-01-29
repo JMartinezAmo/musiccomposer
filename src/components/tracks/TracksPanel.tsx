@@ -79,16 +79,26 @@ export function TracksPanel() {
         <h3>Tracks</h3>
       </div>
 
-      <div className="tracks-list">
+      <div className="tracks-list" role="listbox" aria-label="Lista de tracks">
         {tracks.map((track) => (
           <div
             key={track.id}
             className={`track-item ${selectedTrack?.id === track.id ? 'selected' : ''}`}
             onClick={() => selectTrack(track.id)}
+            role="option"
+            aria-selected={selectedTrack?.id === track.id}
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectTrack(track.id);
+              }
+            }}
           >
             <div
               className="track-color"
               style={{ backgroundColor: TRACK_TYPE_COLORS[track.type] }}
+              aria-hidden="true"
             />
 
             <div className="track-info">
@@ -96,7 +106,7 @@ export function TracksPanel() {
               <span className="track-type">{TRACK_TYPE_LABELS[track.type]}</span>
             </div>
 
-            <div className="track-controls">
+            <div className="track-controls" role="group" aria-label={`Controles de ${track.name}`}>
               <button
                 className={`track-btn ${track.isMuted ? 'active' : ''}`}
                 onClick={(e) => {
@@ -104,6 +114,8 @@ export function TracksPanel() {
                   handleToggleMute(track.id, track.isMuted);
                 }}
                 title="Mute"
+                aria-pressed={track.isMuted}
+                aria-label={`Silenciar ${track.name}`}
               >
                 M
               </button>
@@ -114,6 +126,8 @@ export function TracksPanel() {
                   handleToggleSolo(track.id, track.isSolo);
                 }}
                 title="Solo"
+                aria-pressed={track.isSolo}
+                aria-label={`Solo ${track.name}`}
               >
                 S
               </button>
@@ -129,6 +143,11 @@ export function TracksPanel() {
                 onChange={(e) => handleVolumeChange(track.id, Number(e.target.value))}
                 onClick={(e) => e.stopPropagation()}
                 className="volume-slider"
+                aria-label={`Volumen de ${track.name}`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(track.volume * 100)}
+                aria-valuetext={`${Math.round(track.volume * 100)}%`}
               />
             </div>
 
@@ -141,6 +160,7 @@ export function TracksPanel() {
                 }
               }}
               title="Eliminar track"
+              aria-label={`Eliminar ${track.name}`}
             >
               ×
             </button>

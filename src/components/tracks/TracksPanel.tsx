@@ -103,7 +103,7 @@ export function TracksPanel() {
                   e.stopPropagation();
                   handleToggleMute(track.id, track.isMuted);
                 }}
-                title="Mute"
+                title={track.isMuted ? 'Activar sonido' : 'Silenciar track'}
               >
                 M
               </button>
@@ -113,7 +113,7 @@ export function TracksPanel() {
                   e.stopPropagation();
                   handleToggleSolo(track.id, track.isSolo);
                 }}
-                title="Solo"
+                title={track.isSolo ? 'Desactivar solo' : 'Solo: escuchar solo este track'}
               >
                 S
               </button>
@@ -129,6 +129,7 @@ export function TracksPanel() {
                 onChange={(e) => handleVolumeChange(track.id, Number(e.target.value))}
                 onClick={(e) => e.stopPropagation()}
                 className="volume-slider"
+                title={`Volumen: ${Math.round(track.volume * 100)}%`}
               />
             </div>
 

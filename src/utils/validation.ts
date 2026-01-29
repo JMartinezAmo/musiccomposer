@@ -217,7 +217,7 @@ export function validateNote(note: unknown): ValidationResult<ValidatedNote> {
   }
   return {
     success: false,
-    errors: result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`),
+    errors: result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`),
   };
 }
 
@@ -228,7 +228,7 @@ export function validateTrack(track: unknown): ValidationResult<ValidatedTrack> 
   }
   return {
     success: false,
-    errors: result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`),
+    errors: result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`),
   };
 }
 
@@ -239,7 +239,7 @@ export function validateComposition(composition: unknown): ValidationResult<Vali
   }
   return {
     success: false,
-    errors: result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`),
+    errors: result.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`),
   };
 }
 
